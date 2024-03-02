@@ -1,0 +1,20 @@
+ run your development server with TypeScript by using: npm run dev
+ compile TypeScript to JavaScript with: npm run build
+
+ development environment that supports TypeScript for both your React Native 
+ frontend and your Node.js backend. This setup will enable you to benefit from TypeScript's 
+ type-checking and other language features while building your "Jargle" app.
+
+
+docker build -t jargle-backend .
+docker run -p 3000:3000 jargle-backend
+
+Run the build script:
+Open Jargle Backend
+npm run build
+npm run dev
+
+Go to ngrok and read instructions, then change url in Game Screen
+Run the Compiled Server
+
+node dist/index.ts
