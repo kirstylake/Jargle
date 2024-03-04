@@ -25,7 +25,11 @@ const RegisterScreen = ({ navigation }) => {
     password: '',
     username: '',
     file: null,
-    error: ''
+    error: '',
+    category: '',
+    difficulty: '',
+    score: '',
+    admin: 'false'
   })
 
   //sets the style of the header to a custom styling
@@ -158,7 +162,8 @@ const RegisterScreen = ({ navigation }) => {
   //creates a user refrence for building a complete list of users
   const createUserRef = async () => {
     userRef
-      .add(value)
+      .doc(auth?.currentUser?.uid)
+      .set(value)
       .catch((error) => {
         alert(error);
       })

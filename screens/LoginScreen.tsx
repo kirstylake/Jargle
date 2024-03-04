@@ -6,21 +6,16 @@ import { useNavigation } from '@react-navigation/core';
 import GoogleButton from './components/GoogleButton';
 import { LinearGradient } from 'expo-linear-gradient';
 
-// Define the types for navigation if not already defined
-type AuthNavigationProp = {
-    navigate: (screen: string) => void;
-    replace: (screen: string) => void;
-};
 //https://www.youtube.com/watch?v=onW84a_p4VA&list=PLO3Dk6jx9EISXHQ41tqkBQJLR3FqBYoW9&index=22 
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const video = React.useRef(null);
     const [status, setStatus] = React.useState({});
 
     // Cast the navigation object to use our custom navigation prop types
-    const navigation = useNavigation<AuthNavigationProp>();
+
 
     // useLayoutEffect(() => {
     //     navigation.setOptions({
@@ -34,7 +29,7 @@ const LoginScreen = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                navigation.replace("HomeScreen")
+                navigation.navigate("HomeScreen")
             }
         })
 

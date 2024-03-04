@@ -19,6 +19,7 @@ import { getFirestore, collection, getDocs, query, where, orderBy, onSnapshot, g
 import { getDatabase, ref, set, update } from "firebase/database";
 import { LinearGradient } from 'expo-linear-gradient';
 
+
 const SettingsScreen = ({ navigation }) => {
   const [storagePermission, setStoragePermission] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
@@ -31,8 +32,10 @@ const SettingsScreen = ({ navigation }) => {
     password: '',
     username: '',
     file: null,
-    error: ''
-  })
+    error: '',
+    category: '',
+    difficulty: '',
+    score: ''})
 
   // This function is triggered when the "Open camera" button pressed
   const openCamera = async () => {
@@ -42,7 +45,7 @@ const SettingsScreen = ({ navigation }) => {
 
     //alerts the user if permissions have not been granted
     if (cameraPermission === false) {
-      alert("Please grant camera access");
+      alert("Sorry camera access has not been granted by the phone. This can be changed in the app settings menu of your phone");
       return;
     }
 
@@ -149,11 +152,9 @@ const SettingsScreen = ({ navigation }) => {
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
           console.log('File available at', downloadURL);
           temp = downloadURL;
-      const createUserRef = () => {
-        // Define your function here
-      };
           value.file = temp;
-          createUserRef();
+          console.log(temp)
+
         });
       }
     )
@@ -164,11 +165,20 @@ const SettingsScreen = ({ navigation }) => {
   const logout = async () => {
     try {
       await firebase.auth().signOut();
-      navigation.replace('Login');
+      navigation.replace('LoginScreen');
     } catch (e) {
       console.log(e);
     }
   }
+
+    //creates a user refrence for building a complete list of users
+    const changeCategory = async () => {
+      try {
+        navigation.replace('CategoryScreen');
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
   useEffect(() => {
     let unsubscribeUser = null;
@@ -192,9 +202,11 @@ const SettingsScreen = ({ navigation }) => {
     }
   }, [userData])
 
+  console.log(userData)
   //triggers when the signup button is pressed creates a user in the firebase auth file,
   //stores the image and logs the user in
   async function updateProfile() {
+    console.log('Checking for data:' + value.file)
     if (value.email === '' || value.username === '') {
       setValue({
         ...value,
@@ -204,9 +216,12 @@ const SettingsScreen = ({ navigation }) => {
     }else{
 
     
+  console.log('Checking the value was not erase' + value.file)
+  console.log('user data')
+  console.log(userData[0])
   firebase.firestore()
   .collection('Users')
-  .doc(userData[0].ref_no)
+  .doc(userData[0].id)
   .update({
     'file': value.file,
     'username': value.username,
@@ -214,8 +229,11 @@ const SettingsScreen = ({ navigation }) => {
   })
   .then(() => {
     console.log('User updated!');
-    navigation.replace('Home');
-  });
+    navigation.replace('HomeScreen');
+  }).catch((error) => {
+    // It's important to catch and handle any errors
+    console.error("Error updating user's category:", error);
+});;
   }}
 
   return (
@@ -232,7 +250,7 @@ const SettingsScreen = ({ navigation }) => {
               <View style={styles.profileImageButton}>
                 <TouchableOpacity onPress={pickImage} activeOpacity={0.5} >
                   <View >
-                    <Image style={styles.profileImage} source={{ uri: value && value.file ? value.file : "'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png'" }} />
+                    <Image style={styles.profileImage} source={{ uri: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png' }} />
                   </View>
                 </TouchableOpacity>
               </View>
@@ -273,7 +291,7 @@ const SettingsScreen = ({ navigation }) => {
             </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                onPress={logout}
+                onPress={changeCategory}
                 style={styles.button}>
                 <Text style={styles.buttonText}>Change Category</Text>
               </TouchableOpacity>
