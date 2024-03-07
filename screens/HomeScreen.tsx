@@ -25,6 +25,12 @@ const HomeScreen = ({ navigation }) => {
             >
                 <Text style={styles.playButtonText}>Play</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.playButton}
+                onPress={() => navigation.navigate('QuizScreen', { key: new Date().toString() })} //Ensure a new definition is used every time the app loads
+            >
+                <Text style={styles.playButtonText}>Quiz Mode</Text>
+            </TouchableOpacity>
         </View>
         </LinearGradient>
     );

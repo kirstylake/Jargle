@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Keyboard, ViewStyle, Alert, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, Dimensions, TextStyle } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { firestore, firebase } from '../firebase';
+import { firebase } from '../firebase';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const GameScreen = ({ navigation }) => {
@@ -15,6 +15,13 @@ const GameScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [letterStatuses, setLetterStatuses] = useState({});
 
+
+    // Initialize letterColors with default values
+const [letterColors, setLetterColors] = useState<LetterColors>({
+    Q: 'grey', W: 'grey', E: 'grey', R: 'grey', T: 'grey', Y: 'grey', U: 'grey', I: 'grey', O: 'grey', P: 'grey',
+    A: 'grey', S: 'grey', D: 'grey', F: 'grey', G: 'grey', H: 'grey', J: 'grey', K: 'grey', L: 'grey',
+    Z: 'grey', X: 'grey', C: 'grey', V: 'grey', B: 'grey', N: 'grey', M: 'grey', '⌫': 'grey',
+  });
     //sets the style of the header to a custom styling
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -23,6 +30,11 @@ const GameScreen = ({ navigation }) => {
             headerShadowVisible: false,
             headerTitleStyle: { flex: 1, textAlign: 'left' },
             headerTintColor: 'white',
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
+                    <Text style={styles.helpButtonText}>Back</Text>
+                </TouchableOpacity>
+            ),
             headerRight: () => (
                 <TouchableOpacity onPress={showGameRules} style={{ marginRight: 20 }}>
                     <Text style={styles.helpButtonText}>Help</Text>
@@ -62,7 +74,7 @@ const GameScreen = ({ navigation }) => {
             </View>
         )
     }
-    const [letterColors, setLetterColors] = useState({});
+    // const [letterColors, setLetterColors] = useState({});
     interface LetterColors {
         [key: string]: 'green' | 'yellow' | 'grey';
     }
@@ -304,7 +316,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         margin: 1,
         borderRadius: 3,
-        backgroundColour: 'white'
+        backgroundColor: 'lightGrey'
 
     },
     charText: {

@@ -26,6 +26,17 @@ const SettingsScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const userRef = firebase.firestore().collection('Users')
 
+  // Set header style
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Settings",
+      headerStyle: { backgroundColor: '#004aad' },
+      headerShadowVisible: false,
+      headerTitleStyle: { flex: 1, textAlign: 'left' },
+      headerTintColor: 'white'
+    })
+  }, [navigation]);
+
   const [value, setValue] = useState({
     id: '',
     email: '',
@@ -35,7 +46,8 @@ const SettingsScreen = ({ navigation }) => {
     error: '',
     category: '',
     difficulty: '',
-    score: ''})
+    score: ''
+  })
 
   // This function is triggered when the "Open camera" button pressed
   const openCamera = async () => {
@@ -171,14 +183,23 @@ const SettingsScreen = ({ navigation }) => {
     }
   }
 
-    //creates a user refrence for building a complete list of users
-    const changeCategory = async () => {
-      try {
-        navigation.replace('CategoryScreen');
-      } catch (e) {
-        console.log(e);
-      }
+  //creates a user refrence for building a complete list of users
+  const changeCategory = async () => {
+    try {
+      navigation.replace('CategoryScreen');
+    } catch (e) {
+      console.log(e);
     }
+  }
+
+  //creates a user refrence for building a complete list of users
+  const addJargon = async () => {
+    try {
+      navigation.replace('AddJargonScreen');
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
     let unsubscribeUser = null;
@@ -193,10 +214,10 @@ const SettingsScreen = ({ navigation }) => {
           const userData = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          
+
           }));
           setUserData(userData);
-          setValue({...value, ...userData[0]});
+          setValue({ ...value, ...userData[0] });
         }
       );
     }
@@ -213,28 +234,29 @@ const SettingsScreen = ({ navigation }) => {
         error: 'Email and Username and name are mandatory.'
       })
       return;
-    }else{
+    } else {
 
-    
-  console.log('Checking the value was not erase' + value.file)
-  console.log('user data')
-  console.log(userData[0])
-  firebase.firestore()
-  .collection('Users')
-  .doc(userData[0].id)
-  .update({
-    'file': value.file,
-    'username': value.username,
-    'email': value.email
-  })
-  .then(() => {
-    console.log('User updated!');
-    navigation.replace('HomeScreen');
-  }).catch((error) => {
-    // It's important to catch and handle any errors
-    console.error("Error updating user's category:", error);
-});;
-  }}
+
+      console.log('Checking the value was not erase' + value.file)
+      console.log('user data')
+      console.log(userData[0])
+      firebase.firestore()
+        .collection('Users')
+        .doc(userData[0].id)
+        .update({
+          'file': value.file,
+          'username': value.username,
+          'email': value.email
+        })
+        .then(() => {
+          console.log('User updated!');
+          navigation.replace('HomeScreen');
+        }).catch((error) => {
+          // It's important to catch and handle any errors
+          console.error("Error updating user's category:", error);
+        });;
+    }
+  }
 
   return (
     <KeyboardAvoidingView
@@ -299,12 +321,21 @@ const SettingsScreen = ({ navigation }) => {
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity
+                onPress={addJargon}
+                style={styles.button}>
+                <Text style={styles.buttonText}>Add Jargon</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
                 onPress={logout}
                 style={styles.button}>
                 <Text style={styles.buttonText}>Logout</Text>
               </TouchableOpacity>
             </View>
-            
+
+
 
           </View>
         </ScrollView>
@@ -424,8 +455,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     width: '100%',
-    height: '100%',
-    marginTop: "10%"
+    height: '100%'
   },
   error: {
     marginTop: 10,
@@ -468,7 +498,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center'
-},
+  },
 });
 
 export default SettingsScreen

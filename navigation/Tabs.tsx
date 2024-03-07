@@ -9,6 +9,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LeaderboardScreen from "../screens/LeaderboardScreen";
 
 //https://www.youtube.com/watch?v=gPaBicMaib4
 
@@ -85,6 +86,25 @@ const Tabs = () => {
                             <Text
                                 style={{ color: focused ? '#0782F9' : '#748c94', }}>
                                 Settings
+                            </Text>
+                        </View>
+                    ),
+                }} />
+            <Tab.Screen name="Leaderboard" component={LeaderboardScreen}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                            <Image
+                                source={require('../assets/icons/leaderboard.png')}
+                                resizeMode='contain'
+                                style={{
+                                    width: 25,
+                                    height: 25,
+                                    tintColor: focused ? '#0782F9' : '#748c94'
+                                }} />
+                            <Text
+                                style={{ color: focused ? '#0782F9' : '#748c94', }}>
+                                Leaderboard
                             </Text>
                         </View>
                     ),
