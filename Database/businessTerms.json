@@ -1,0 +1,254 @@
+[
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of setting goals and determining the means to achieve them.",
+        "DifficultyLevel": 5,
+        "Word": "Strategic Planning"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The analysis of an organization's strengths, weaknesses, opportunities, and threats.",
+        "DifficultyLevel": 5,
+        "Word": "SWOT Analysis"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of converting raw materials or components into finished goods.",
+        "DifficultyLevel": 2,
+        "Word": "Manufacturing"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document that outlines the mission, vision, and values of an organization.",
+        "DifficultyLevel": 5,
+        "Word": "Company Charter"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of determining the price of a product or service based on market research and analysis.",
+        "DifficultyLevel": 5,
+        "Word": "Pricing Strategy"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of communicating information about a product or service to customers.",
+        "DifficultyLevel": 2,
+        "Word": "Marketing"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document that outlines the terms and conditions of employment for a specific position.",
+        "DifficultyLevel": 5,
+        "Word": "Job Description"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of hiring new employees to fill vacant positions within an organization.",
+        "DifficultyLevel": 2,
+        "Word": "Recruitment"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of evaluating an employee's performance and providing feedback.",
+        "DifficultyLevel": 5,
+        "Word": "Performance Review"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document that outlines the rights and responsibilities of shareholders in a corporation.",
+        "DifficultyLevel": 5,
+        "Word": "Shareholders Agreement"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of managing and controlling the flow of goods from production to consumption.",
+        "DifficultyLevel": 5,
+        "Word": "Supply Chain Management"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document that outlines the terms and conditions of a partnership agreement.",
+        "DifficultyLevel": 5,
+        "Word": "Partnership Agreement"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of identifying potential risks and developing strategies to mitigate them.",
+        "DifficultyLevel": 5,
+        "Word": "Risk Management"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of creating, implementing, and evaluating organizational policies and procedures.",
+        "DifficultyLevel": 5,
+        "Word": "Policy Development"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document that outlines the terms and conditions of a loan agreement between a lender and a borrower.",
+        "DifficultyLevel": 5,
+        "Word": "Loan Agreement"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of identifying, acquiring, and managing financial resources to achieve organizational goals.",
+        "DifficultyLevel": 5,
+        "Word": "Financial Management"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document that outlines the terms and conditions of a lease agreement between a lessor and a lessee.",
+        "DifficultyLevel": 5,
+        "Word": "Lease Agreement"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of identifying, evaluating, and selecting suppliers to provide goods or services.",
+        "DifficultyLevel": 5,
+        "Word": "Supplier Selection"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document that outlines the terms and conditions of a sales agreement between a seller and a buyer.",
+        "DifficultyLevel": 5,
+        "Word": "Sales Agreement"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of planning, organizing, directing, and controlling an organization's resources to achieve its goals.",
+        "DifficultyLevel": 2,
+        "Word": "Management"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A strategic approach to managing human resources to achieve organizational goals.",
+        "DifficultyLevel": 2,
+        "Word": "HRM"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of systematically planning, monitoring, and managing all aspects of a project.",
+        "DifficultyLevel": 2,
+        "Word": "PMO"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A standardized set of activities designed to produce a specific output for a particular customer or market.",
+        "DifficultyLevel": 2,
+        "Word": "Process"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A measurement used to evaluate the performance or effectiveness of a system, process, or product.",
+        "DifficultyLevel": 2,
+        "Word": "KPI"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A management philosophy emphasizing the importance of continuous improvement in all aspects of an organization.",
+        "DifficultyLevel": 2,
+        "Word": "Kaizen"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The systematic identification, assessment, and control of potential risks that may impact the success of a project or organization.",
+        "DifficultyLevel": 2,
+        "Word": "Risk"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A structured approach to problem-solving that utilizes data and statistical methods to analyze and improve processes.",
+        "DifficultyLevel": 2,
+        "Word": "SixSigma"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The practice of leveraging technology to streamline and automate business processes.",
+        "DifficultyLevel": 2,
+        "Word": "Automation"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A process that involves identifying, analyzing, and responding to potential threats to an organization's assets, operations, or reputation.",
+        "DifficultyLevel": 2,
+        "Word": "Security"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A management approach that focuses on the continuous improvement of product quality and customer satisfaction.",
+        "DifficultyLevel": 2,
+        "Word": "Quality"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of gathering, analyzing, and interpreting data to inform business decisions and strategies.",
+        "DifficultyLevel": 2,
+        "Word": "Analytics"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A framework for organizing and managing the development of software applications.",
+        "DifficultyLevel": 2,
+        "Word": "Methodology"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document outlining the goals, strategies, and tactics for achieving success in a particular area of business.",
+        "DifficultyLevel": 2,
+        "Word": "Plan"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of identifying, assessing, and managing potential threats to an organization's ability to achieve its objectives.",
+        "DifficultyLevel": 2,
+        "Word": "RiskManagement"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The practice of developing and implementing strategies to attract, retain, and motivate employees.",
+        "DifficultyLevel": 2,
+        "Word": "Talent"
+    },
+    {
+        "CategoryID": "4",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of systematically planning, organizing, and controlling resources to achieve specific goals.",
+        "DifficultyLevel": 2,
+        "Word": "Management"
+    }
+]

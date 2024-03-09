@@ -1,10 +1,11 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { firebase } from '../firebase';
 
 const LeaderboardScreen = ({ navigation }) => {
     const [leaderboardData, setLeaderboardData] = useState([]);
+    const [loading, setLoading] = useState(false)
 
     // Set header style
     useLayoutEffect(() => {
@@ -22,6 +23,7 @@ const LeaderboardScreen = ({ navigation }) => {
     }, []);
 
     const fetchLeaderboardData = async () => {
+        setLoading(true)
         try {
             const usersCollection = firebase.firestore().collection('Users');
             const snapshot = await usersCollection.orderBy('score', 'desc').limit(10).get();
@@ -32,6 +34,7 @@ const LeaderboardScreen = ({ navigation }) => {
                     ...doc.data(),
                 }));
                 setLeaderboardData(leaderboardData);
+                setLoading(false)
             } else {
                 console.log('No users found in Firestore.');
             }
@@ -44,10 +47,10 @@ const LeaderboardScreen = ({ navigation }) => {
         <View style={styles.leaderboardItem}>
             <Text style={styles.rank}>{index + 1}</Text>
             {item.file ? (
-            <Image source={{ uri: item.file }} style={styles.profilePicture} />
-        ) : (
-            <Image source={require('../assets/icons/camera.png')} style={styles.profilePicture} />
-        )}
+                <Image source={{ uri: item.file }} style={styles.profilePicture} />
+            ) : (
+                <Image source={require('../assets/icons/emptyUser.png')} style={styles.profilePicture} />
+            )}
             <Text style={styles.username}>{item.username}</Text>
             <Text style={styles.score}>{item.score}</Text>
         </View>
@@ -55,13 +58,19 @@ const LeaderboardScreen = ({ navigation }) => {
 
     return (
         <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
-            <FlatList
-                data={leaderboardData}
-                keyExtractor={(item) => item.id}
-                renderItem={renderLeaderboardItem}
-                contentContainerStyle={styles.container}
-                horizontal={false}
-            />
+            {loading ? (
+                <ActivityIndicator size="large" color="white" />
+            ) : (
+                <>
+                    <FlatList
+                        data={leaderboardData}
+                        keyExtractor={(item) => item.id}
+                        renderItem={renderLeaderboardItem}
+                        contentContainerStyle={styles.container}
+                        horizontal={false}
+                    />
+                </>
+            )}
         </LinearGradient>
     );
 };

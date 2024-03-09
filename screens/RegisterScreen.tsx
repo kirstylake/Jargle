@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { auth, firebase } from '../firebase'
 import * as ImagePicker from "expo-image-picker";
@@ -26,10 +27,11 @@ const RegisterScreen = ({ navigation }) => {
     username: '',
     file: null,
     error: '',
-    category: '',
+    category: "0",
     difficulty: '',
-    score: '',
-    admin: 'false'
+    score: 0,
+    admin: 'false',
+    wordsPlayed: []
   })
 
   //sets the style of the header to a custom styling
@@ -39,7 +41,12 @@ const RegisterScreen = ({ navigation }) => {
       headerStyle: { backgroundColor: '#004aad' },
       headerShadowVisible: false,
       headerTitleStyle: { flex: 1, textAlign: 'left' },
-      headerTintColor: 'white'
+      headerTintColor: 'white',
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.replace("LoginScreen", { 'route': 'true' })} style={{ marginLeft: 20 }}>
+            <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
+    ),
     })
   })
 
@@ -171,46 +178,92 @@ const RegisterScreen = ({ navigation }) => {
 
   //triggers when the signup button is pressed creates a user in the firebase auth file,
   //stores the image and logs the user in
+  // async function signUp() {
+  //   if (value.email === '' || value.password === '' || value.username === '') {
+  //     setValue({
+  //       ...value,
+  //       error: 'Email and password and name are mandatory.'
+  //     })
+  //     return;
+  //   }
+  //   await createUserWithEmailAndPassword(auth, value.email, value.password)
+  //     .then(() => {
+  //       value.id = (auth?.currentUser?.uid)
+  //       value.error = '';
+  //       createUserRef();
+  //     })
+  //     .then(() => {
+  //       auth().currentUser.updateProfile({
+  //         displayName: value.username,
+  //         photoURL: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png'
+  //       })
+  //       console.log(auth.currentUser);
+  //       // navigation.navigate('CategoryScreen');
+  //       changeCategory();
+  //     })
+  //     .catch((error) => {
+  //       setValue({
+  //         ...value,
+  //         error: error.message,
+  //       })
+  //       console.log(error.message)
+  //     })
+
+  // }
+
   async function signUp() {
     if (value.email === '' || value.password === '' || value.username === '') {
       setValue({
         ...value,
-        error: 'Email and password and name are mandatory.'
-      })
+        error: 'Email, password, and username are mandatory.'
+      });
       return;
     }
-    await createUserWithEmailAndPassword(auth, value.email, value.password)
-      .then(() => {
-        value.id = (auth?.currentUser?.uid)
-        createUserRef();
-      })
-      .then(() => {
-        auth.currentUser.updateProfile({
-          displayName: value.username,
-          photoURL: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png'
-        })
-        console.log(auth.currentUser);
-        navigation.navigate('Login');
-      })
-      .catch((error) => {
-        setValue({
-          ...value,
-          error: error.message,
-        })
-      })
+  
+    try {
+      // Create user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, value.email, value.password);
+      const user = userCredential.user;
+  
+      // Update user profile with username and photoURL
+      await firebase.auth().currentUser.updateProfile({
+        displayName: value.username,
+        photoURL: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png'
+      });
+  
+      // Store user data in Firestore
+      value.id = user.uid;
+      await createUserRef();
+  
+      // Navigate to CategoryScreen
+      changeCategory();
+    } catch (error) {
+      setValue({
+        ...value,
+        error: error.message,
+      });
+      console.log(error.message);
+    }
   }
-
+  //creates a user refrence for building a complete list of users
+  const changeCategory = async () => {
+    try {
+      navigation.replace('CategoryScreen');
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior="padding">
       <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
-        <ScrollView style={styles.scrollContainer}>
-          <View style={styles.greetingContainer}>
-            <Text style={styles.greetingText}>Welcome to Jargle</Text>
-            <Text style={styles.greetingText}>Please Create A User Account</Text>
-            <Text style={styles.profileImageText}>Click image to select a profile picture</Text>
-          </View>
+        <View style={styles.greetingContainer}>
+          <Text style={styles.greetingText}>Welcome to Jargle</Text>
+          <Text style={styles.greetingText}>Please Create A User Account</Text>
+          <Text style={styles.profileImageText}>Click image to select a profile picture</Text>
+        </View>
+        <ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           <View style={styles.profileImageSelectorContainer}>
             <View style={styles.profileImageContainer}>
               <View style={styles.profileImageButton}>
@@ -285,7 +338,6 @@ const styles = StyleSheet.create({
   },
   control: {
     flex: 1,
-    marginTop: 10
   },
   signUpButtonContainer: {
     width: 125,
@@ -307,7 +359,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center'
-},
+  },
   profileImageText: {
     fontSize: 13,
     fontWeight: '600',
@@ -359,7 +411,7 @@ const styles = StyleSheet.create({
   },
   textFields: {
     height: 50,
-    width: '60%',
+    width: '70%',
     margin: '1%',
     borderWidth: 1,
     backgroundColor: 'white',
@@ -374,7 +426,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 5
+    marginTop: 5,
   },
   image: {
     flex: 1,
@@ -385,7 +437,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     width: '100%',
-    height: '100%',
+    height: '60%',
     marginTop: "10%"
   },
   error: {
@@ -424,6 +476,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  backButtonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+},
 
 });
 

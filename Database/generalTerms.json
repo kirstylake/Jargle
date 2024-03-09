@@ -1,0 +1,142 @@
+[
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A set of rules or guidelines that govern how individuals and organizations should interact with one another in a given environment.",
+        "DifficultyLevel": 2,
+        "Word": "Protocol"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document or system that outlines the structure, format, and contents of a piece of information.",
+        "DifficultyLevel": 2,
+        "Word": "Format"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A measure of the quality, reliability, or effectiveness of a product, service, or process.",
+        "DifficultyLevel": 2,
+        "Word": "Quality"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A brief statement or summary that provides an overview of a topic, issue, or problem.",
+        "DifficultyLevel": 2,
+        "Word": "Summary"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A strategy or plan of action designed to achieve a specific goal or objective.",
+        "DifficultyLevel": 2,
+        "Word": "Strategy"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A person or organization that provides financial support or resources to another person, group, or project.",
+        "DifficultyLevel": 2,
+        "Word": "Sponsor"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A process or system for recognizing, organizing, and storing information in a way that makes it accessible and useful.",
+        "DifficultyLevel": 2,
+        "Word": "Management"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A set of rules, principles, or guidelines that govern how individuals and organizations should behave or conduct themselves in a given situation.",
+        "DifficultyLevel": 2,
+        "Word": "Ethics"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A method or approach to solving problems or making decisions based on logical reasoning and evidence.",
+        "DifficultyLevel": 2,
+        "Word": "Logic"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A process of examining, analyzing, and interpreting data or information to uncover patterns, trends, or insights that can inform decision-making.",
+        "DifficultyLevel": 2,
+        "Word": "Analysis"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A set of guidelines or procedures that define how a task, process, or activity should be performed in order to achieve desired outcomes.",
+        "DifficultyLevel": 2,
+        "Word": "Procedure"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A measure of the effectiveness or efficiency of a system, process, or activity.",
+        "DifficultyLevel": 2,
+        "Word": "Efficiency"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A document or system that outlines the structure, format, and contents of a piece of information.",
+        "DifficultyLevel": 2,
+        "Word": "Format"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A statement or assertion that something is true, correct, or valid based on evidence or reasoning.",
+        "DifficultyLevel": 2,
+        "Word": "Assertion"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A process of identifying, analyzing, and mitigating potential risks or threats to an organization, project, or activity.",
+        "DifficultyLevel": 2,
+        "Word": "Risk"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A set of principles or standards that guide the behavior, actions, and decisions of individuals and organizations.",
+        "DifficultyLevel": 2,
+        "Word": "Standard"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A plan or strategy developed by a company to achieve specific business objectives, goals, or targets within a defined timeframe.",
+        "DifficultyLevel": 2,
+        "Word": "Plan"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A measure of the quality, reliability, or effectiveness of a product, service, or process.",
+        "DifficultyLevel": 2,
+        "Word": "Quality"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A person or entity that receives or consumes a product, service, or information.",
+        "DifficultyLevel": 2,
+        "Word": "Consumer"
+    },
+    {
+        "CategoryID": "5",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A systematic process of collecting, organizing, and analyzing numerical data to make informed decisions.",
+        "DifficultyLevel": 2,
+        "Word": "Data"
+    }
+]

@@ -24,7 +24,7 @@ const App: React.FC = () => {
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{headerShown: false}} />
         <Stack.Screen name="CategoryScreen" component={CategoryScreen} options={{headerShown: true}} />
-        <Stack.Screen name="QuizScreen" component={QuizScreen} options={{headerShown: false}} />
+        <Stack.Screen name="QuizScreen" component={QuizScreen} options={{headerShown: true}} />
         <Stack.Screen name="AddJargonScreen" component={AddJargonScreen} options={{headerShown: true}} />
         <Stack.Screen name="LeaderboardScreen" component={LeaderboardScreen} options={{headerShown: true}} />
       </Stack.Navigator>

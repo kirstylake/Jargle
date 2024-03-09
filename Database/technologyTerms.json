@@ -1,0 +1,58 @@
+[
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The process of finding and fixing bugs (errors or defects) in a computer program.",
+        "DifficultyLevel": 1,
+        "Word": "Debugging"
+    },
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A software development process that emphasizes iterative development, collaboration, and customer feedback.",
+        "DifficultyLevel": 2,
+        "Word": "Agile"
+    },
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A programming language commonly used for web development. It is known for its simplicity and flexibility.",
+        "DifficultyLevel": 3,
+        "Word": "JavaScript"
+    },
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A version control system used for tracking changes in source code during software development.",
+        "DifficultyLevel": 2,
+        "Word": "Git"
+    },
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A technique used in software development to represent data in a structured format, typically as key-value pairs.",
+        "DifficultyLevel": 5,
+        "Word": "JSON (JavaScript Object Notation)"
+    },
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A process of testing individual components of a software application in isolation.",
+        "DifficultyLevel": 5,
+        "Word": "Unit Testing"
+    },
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A technique used in software development to detect and eliminate potential security vulnerabilities in code.",
+        "DifficultyLevel": 5,
+        "Word": "Security Testing"
+    },
+    {
+        "CategoryID": "1",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A software development process that focuses on creating small, independent units of functionality.",
+        "DifficultyLevel": 5,
+        "Word": "Microservices Architecture"
+    }
+]

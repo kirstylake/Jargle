@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView,
     ScrollView,
     TouchableOpacity,
+    ActivityIndicator,
 } from 'react-native';
 import { auth, firebase, firestore } from '../firebase'
 import * as ImagePicker from "expo-image-picker";
@@ -16,6 +17,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { LinearGradient } from 'expo-linear-gradient';
 import { onSnapshot, query, collection, where } from 'firebase/firestore';
 import RegisterScreen from './RegisterScreen';
+import { useRoute } from '@react-navigation/native';
+
 
 // Define the types for navigation if not already defined
 
@@ -23,10 +26,44 @@ const CategoryScreen = ({ navigation }) => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState(null);
+    const [newUser, setNewUser] = useState(false);
     const [value, setValue] = useState({
         id: '',
         categoryID: ''
     })
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const route = useRoute();
+    const { params } = route;
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: "",
+            headerStyle: { backgroundColor: '#004aad' },
+            headerShadowVisible: false,
+            headerTitleStyle: { flex: 1, textAlign: 'left' },
+            headerTintColor: 'white',
+            headerLeft: () => (
+                <TouchableOpacity onPress={handleBack} style={{ marginLeft: 20 }}>
+                    {selectedCategory && !newUser && (
+                        <Text style={styles.helpButtonText}>Back</Text>
+                    )}
+                </TouchableOpacity>
+            ),
+            // headerRight: () => (
+            //     <TouchableOpacity onPress={showGameRules} style={{ marginRight: 20 }}>
+            //         <Text style={styles.helpButtonText}>Help</Text>
+            //     </TouchableOpacity>
+            // ),
+        })
+    })
+
+    const handleBack = async () => {
+        try {
+            navigation.replace('HomeScreen');
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     const fetchCategories = async () => {
         setLoading(true);
@@ -50,6 +87,7 @@ const CategoryScreen = ({ navigation }) => {
             console.error('Failed to fetch categories from Firestore:', error);
         } finally {
             setLoading(false); // Stop loading
+            setSelectedCategory(userData && userData.length > 0 ? userData[0].category : null)
         }
     };
 
@@ -67,26 +105,27 @@ const CategoryScreen = ({ navigation }) => {
                         ...doc.data(),
                     }));
                     setUserData(userData);
-                    setValue({ ...value, ...userData[0] });
+                    setValue({ ...value, ...userData[0] })
                 }
             );
+
         }
         fetchCategories();
     }, [userData]);
 
-    const updateProfile = (categoryID: string)  => {
+    const updateProfile = (categoryID: string) => {
         // Ensure `userData` is not empty and has the correct structure
         console.log(userData)
         if (userData && userData.length > 0 && userData[0].id) {
-            
+
             firebase.firestore().collection('Users')
                 .doc(userData[0].id) // Use the correct document ID from `userData[0].id`
                 .update({
-                    category : 'Categories/' + categoryID // If you want to store a reference to the category document
+                    category: categoryID // If you want to store a reference to the category document
                 })
                 .then(() => {
                     console.log('User updated!');
-                    navigation.navigate('SettingsScreen');
+                    navigation.navigate("HomeScreen", { 'route': 'true' })
                 })
                 .catch((error) => {
                     // It's important to catch and handle any errors
@@ -97,34 +136,68 @@ const CategoryScreen = ({ navigation }) => {
             console.log('No valid user data available for updating.');
         }
     }
-    if (loading) {
-        return <Text>Loading...</Text>; // Loading indicator
+
+
+    // Function to handle category selection
+    const handleCategorySelect = (categoryId) => {
+        setSelectedCategory(categoryId);
     }
-    console.log(userData[0])
+
+    // Function to handle saving changes
+    const handleSaveChanges = () => {
+        if (selectedCategory) {
+            setLoading(true);
+            updateProfile(selectedCategory);
+        } else {
+            console.log("Please select a category before saving changes.");
+        }
+    }
+
+    console.log(userData && userData.length > 0 ? userData[0] : null);
     return (
         <KeyboardAvoidingView
             style={styles.container}
             behavior="padding">
+
             <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
-                <ScrollView style={styles.scrollContainer}>
-                    <View style={styles.container}>
+                {loading && userData && categories ? (
+                    <ActivityIndicator size="large" color="white" />
+                ) : (
+                    <>
+                        <Text style={styles.categoryText}>Choose a Category</Text>
                         <ScrollView style={styles.scrollContainer}>
-                            {categories.map((category, index) => (
-                                <View key={category.id} style={{ margin: 10 }}>
-                                    <TouchableOpacity
-                                        onPress={() => updateProfile(category.id)}
-                                        style={styles.button}>
-                                        <Text style={styles.buttonText}>{category.CategoryName}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            ))}
+                            <View style={styles.container}>
+                                <ScrollView style={styles.scrollContainer}>
+                                    {categories.map((category, index) => (
+                                        <View key={category.id} style={{ margin: 10 }}>
+                                            <TouchableOpacity
+                                                onPress={() => handleCategorySelect(category.id)}
+                                                style={[
+                                                    styles.button,
+                                                    selectedCategory === category.id && { backgroundColor: 'white' }
+                                                    // userData && userData.length > 0 && userData[0].category === category.id && { backgroundColor: '#3D87D4' }
+                                                ]}
+                                            >
+                                                <Text style={[styles.buttonText, selectedCategory === category.id && { color: '#3D87D4' }]}>
+                                                    {category.CategoryName}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                                <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
+                                    <Text style={styles.saveButtonText}>Save Changes</Text>
+                                </TouchableOpacity>
+                            </View>
                         </ScrollView>
-                    </View>
-                </ScrollView>
+
+                    </>
+                )}
             </LinearGradient>
-        </KeyboardAvoidingView >
-    );
-}
+
+        </KeyboardAvoidingView>
+    )
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -238,8 +311,7 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flex: 1,
         width: '100%',
-        height: '100%',
-        marginTop: "10%"
+        height: '100%'
     },
     error: {
         marginTop: 10,
@@ -248,7 +320,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#D54826FF',
     },
     button: {
-        backgroundColor: '#004aad',
+        backgroundColor: '#3D87D4',
         width: '100%',
         padding: 15,
         borderRadius: 10,
@@ -261,7 +333,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
     buttonText: {
-        color: 'white',
+        color: 'black',
         fontWeight: '700',
         fontSize: 16,
     },
@@ -276,6 +348,32 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    helpButtonText: {
+        color: 'white',
+        fontSize: 18,
+        textAlign: 'center',
+    },
+    categoryText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingTop: 10,
+        paddingBottom: 10,
+        color: 'white'
+    },
+    saveButton: {
+        width: '50%',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 20,
+        borderColor: '#3D87D4',
+        borderWidth: 5
+    },
+    saveButtonText: {
+        color: 'white',
+        fontWeight: '700',
+        fontSize: 16,
     },
 
 });

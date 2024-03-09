@@ -16,26 +16,14 @@ const LoginScreen = ({navigation}) => {
 
     // Cast the navigation object to use our custom navigation prop types
 
-
-    // useLayoutEffect(() => {
-    //     navigation.setOptions({
-    //       title: "",
-    //       headerStyle: { backgroundColor: '#004aad' },
-    //       headerShadowVisible: false,
-    //       headerTitleStyle: { flex: 1, textAlign: 'left' },
-    //      })
-    //   })
-
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
                 navigation.navigate("HomeScreen")
             }
         })
-
         return unsubscribe
     }, [])
-
 
     const handleSignUp = () => {
         navigation.navigate('RegisterScreen')

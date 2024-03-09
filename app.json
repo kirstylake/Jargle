@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Jargle",
-    "slug": "Jargle",
+    "slug": "jargle",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "90b0f593-eee2-4213-bbd2-4b8d93b89266"
+      }
+    },
+    "owner": "kirsty_lake"
   }
 }

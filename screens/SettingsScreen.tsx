@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { auth, firebase, firestore } from '../firebase'
 import * as ImagePicker from "expo-image-picker";
@@ -20,11 +21,25 @@ import { getDatabase, ref, set, update } from "firebase/database";
 import { LinearGradient } from 'expo-linear-gradient';
 
 
+
 const SettingsScreen = ({ navigation }) => {
   const [storagePermission, setStoragePermission] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [userData, setUserData] = useState(null);
   const userRef = firebase.firestore().collection('Users')
+  const [forceRefresh, setForceRefresh] = useState(false);
+
+  useEffect(() => {
+    // Refresh the screen when navigating back from GameScreen
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (forceRefresh) {
+        console.log("Refreshed SettingsScreen");
+        setForceRefresh(false);
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, forceRefresh]);
 
   // Set header style
   useLayoutEffect(() => {
@@ -46,7 +61,8 @@ const SettingsScreen = ({ navigation }) => {
     error: '',
     category: '',
     difficulty: '',
-    score: ''
+    score: '',
+    wordsPlayed: []
   })
 
   // This function is triggered when the "Open camera" button pressed
@@ -263,84 +279,88 @@ const SettingsScreen = ({ navigation }) => {
       style={styles.container}
       behavior="padding">
       <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
-        <ScrollView style={styles.scrollContainer}>
-          <View style={styles.greetingContainer}>
-            <Text style={styles.profileImageText}>Click image to select a profile picture</Text>
-          </View>
-          <View style={styles.profileImageSelectorContainer}>
-            <View style={styles.profileImageContainer}>
-              <View style={styles.profileImageButton}>
-                <TouchableOpacity onPress={pickImage} activeOpacity={0.5} >
-                  <View >
-                    <Image style={styles.profileImage} source={{ uri: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png' }} />
-                  </View>
-                </TouchableOpacity>
+      {!userData ? (
+                <ActivityIndicator size="large" color="white" />
+            ) : (
+                <>
+            <ScrollView style={styles.scrollContainer}>
+              <View style={styles.greetingContainer}>
+                <Text style={styles.profileImageText}>Click image to select a profile picture</Text>
               </View>
-              <View style={styles.cameraContainer}>
-                <TouchableOpacity onPress={openCamera} activeOpacity={0.5}>
-                  <View style={styles.cameraImageContainer}>
-                    <Image style={styles.cameraImage} source={require("../assets/icons/camera.png")} />
+              <View style={styles.profileImageSelectorContainer}>
+                <View style={styles.profileImageContainer}>
+                  <View style={styles.profileImageButton}>
+                    <TouchableOpacity onPress={pickImage} activeOpacity={0.5} >
+                      <View >
+                        <Image style={styles.profileImage} source={{ uri: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png' }} />
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
+                  <View style={styles.cameraContainer}>
+                    <TouchableOpacity onPress={openCamera} activeOpacity={0.5}>
+                      <View style={styles.cameraImageContainer}>
+                        <Image style={styles.cameraImage} source={require("../assets/icons/camera.png")} />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
+
+              {!!value.error && <View style={styles.error}><Text>{value.error}</Text></View>}
+
+              <View style={styles.controls}>
+                <View style={styles.textFields}>
+                  <TextInput placeholder={value && value.username ? value.username : ""}
+                    style={styles.control}
+                    value={value.username}
+                    onChangeText={(text) => setValue({ ...value, username: text })}
+                  />
+                </View>
+                <View style={styles.textFields}>
+                  <TextInput placeholder={value && value.email ? value.email : ""}
+                    style={styles.control}
+                    value={value.email}
+                    onChangeText={(text) => setValue({ ...value, email: text })}
+                  />
+                </View>
+
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={updateProfile}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Save Profile Update</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={changeCategory}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Change Category</Text>
+                  </TouchableOpacity>
+                </View>
+
+              { userData[0].admin === true && 
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={addJargon}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Add Jargon</Text>
+                  </TouchableOpacity>
+                </View>}
+
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={logout}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Logout</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </ScrollView>
+            <View style={{ alignItems: 'flex-end' }}>
             </View>
-          </View>
-
-          {!!value.error && <View style={styles.error}><Text>{value.error}</Text></View>}
-
-          <View style={styles.controls}>
-            <View style={styles.textFields}>
-              <TextInput placeholder={value && value.username ? value.username : ""}
-                style={styles.control}
-                value={value.username}
-                onChangeText={(text) => setValue({ ...value, username: text })}
-              />
-            </View>
-            <View style={styles.textFields}>
-              <TextInput placeholder={value && value.email ? value.email : ""}
-                style={styles.control}
-                value={value.email}
-                onChangeText={(text) => setValue({ ...value, username: text })}
-              />
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={updateProfile}
-                style={styles.button}>
-                <Text style={styles.buttonText}>Update Profile</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={changeCategory}
-                style={styles.button}>
-                <Text style={styles.buttonText}>Change Category</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={addJargon}
-                style={styles.button}>
-                <Text style={styles.buttonText}>Add Jargon</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={logout}
-                style={styles.button}>
-                <Text style={styles.buttonText}>Logout</Text>
-              </TouchableOpacity>
-            </View>
-
-
-
-          </View>
-        </ScrollView>
-        <View style={{ alignItems: 'flex-end' }}>
-        </View>
+            </>
+            )}
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -361,7 +381,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 10
+    margin: 10
   },
   signUpButtonContainer: {
     width: 125,

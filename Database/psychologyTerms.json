@@ -1,0 +1,164 @@
+[
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by persistent feelings of sadness, hopelessness, and loss of interest or pleasure in activities.",
+        "DifficultyLevel": 2,
+        "Word": "Depression"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by excessive fear or anxiety about everyday situations, often leading to avoidance behavior.",
+        "DifficultyLevel": 5,
+        "Word": "Generalized Anxiety Disorder (GAD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A severe mental health disorder characterized by hallucinations, delusions, disorganized thinking, and impaired cognitive function.",
+        "DifficultyLevel": 2,
+        "Word": "Schizophrenia"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by excessive worry, fear, or apprehension about a specific object or situation, often leading to avoidance behavior.",
+        "DifficultyLevel": 2,
+        "Word": "Phobia"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mood disorder characterized by alternating episodes of mania (elevated mood) and depression (low mood).",
+        "DifficultyLevel": 5,
+        "Word": "Bipolar Disorder"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by recurrent, intrusive thoughts (obsessions) and repetitive behaviors or mental acts (compulsions).",
+        "DifficultyLevel": 5,
+        "Word": "Obsessive-Compulsive Disorder (OCD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by persistent, excessive worry and fear about separation from attachment figures, often leading to avoidance behavior.",
+        "DifficultyLevel": 5,
+        "Word": "Separation Anxiety Disorder"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by recurrent episodes of intense fear or discomfort, accompanied by physical symptoms such as chest pain, heart palpitations, and shortness of breath.",
+        "DifficultyLevel": 5,
+        "Word": "Panic Disorder"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A personality disorder characterized by a pervasive pattern of instability in interpersonal relationships, self-image, and emotions, as well as impulsivity.",
+        "DifficultyLevel": 5,
+        "Word": "Borderline Personality Disorder (BPD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by persistent, intrusive thoughts about a traumatic event, accompanied by avoidance of reminders and hyperarousal symptoms.",
+        "DifficultyLevel": 5,
+        "Word": "Post-Traumatic Stress Disorder (PTSD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A personality disorder characterized by a pervasive pattern of disregard for and violation of the rights of others, often accompanied by impulsivity and a lack of empathy.",
+        "DifficultyLevel": 5,
+        "Word": "Antisocial Personality Disorder (ASPD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A neurodevelopmental disorder characterized by persistent difficulties with social communication and interaction, as well as restricted and repetitive patterns of behavior, interests, or activities.",
+        "DifficultyLevel": 5,
+        "Word": "Autism Spectrum Disorder (ASD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by uncontrollable urges to consume large amounts of food, often followed by feelings of guilt or shame.",
+        "DifficultyLevel": 5,
+        "Word": "Binge Eating Disorder"
+    },
+    {
+        "CategoryID": "3",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by persistent difficulties with attention, hyperactivity, and impulsivity, often interfering with daily functioning.",
+        "DifficultyLevel": 5,
+        "Word": "Attention-Deficit/Hyperactivity Disorder (ADHD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mood disorder characterized by recurrent episodes of depression during the winter months, often accompanied by low energy and increased sleep.",
+        "DifficultyLevel": 5,
+        "Word": "Seasonal Affective Disorder (SAD)"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A mental health disorder characterized by persistent and excessive worry, fear, or nervousness about everyday situations. It can interfere with daily activities and may be accompanied by physical symptoms such as rapid heartbeat, sweating, and trembling.",
+        "DifficultyLevel": 2,
+        "Word": "Anxiety"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "The feeling of mental or emotional strain or tension resulting from adverse or demanding circumstances. It can manifest in physical symptoms such as headaches, muscle tension, and fatigue.",
+        "DifficultyLevel": 2,
+        "Word": "Stress"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "An unwanted and recurrent thought, image, or urge that causes distress or anxiety. It often leads to repetitive behaviors or mental acts performed in response to these obsessions.",
+        "DifficultyLevel": 2,
+        "Word": "Obsession"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A repetitive behavior or mental act performed in response to an obsession or according to rigid rules. It is aimed at reducing distress or preventing a feared event or situation.",
+        "DifficultyLevel": 2,
+        "Word": "Compulsion"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A severe mental disorder characterized by a disconnection from reality, including hallucinations, delusions, disorganized thinking and speech, and impaired emotional expression.",
+        "DifficultyLevel": 2,
+        "Word": "Psychosis"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "An emotional response to a distressing or disturbing event that involves feelings of fear, helplessness, or horror. It can lead to symptoms such as intrusive memories, nightmares, and hypervigilance.",
+        "DifficultyLevel": 2,
+        "Word": "Trauma"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A complex brain disorder characterized by compulsive engagement in rewarding stimuli despite adverse consequences. It can lead to tolerance, withdrawal, and compulsive behavior.",
+        "DifficultyLevel": 2,
+        "Word": "Addiction"
+    },
+    {
+        "CategoryID": "6",
+        "DateAdded": "2024-03-08T12:00:00Z",
+        "Definition": "A sudden, intense feeling of fear or anxiety that typically occurs without warning. It is often accompanied by physical symptoms such as rapid heartbeat, sweating, and shortness of breath.",
+        "DifficultyLevel": 2,
+        "Word": "Panic"
+    }
+
+]
