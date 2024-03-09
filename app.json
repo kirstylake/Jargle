@@ -28,9 +28,15 @@
     },
     "extra": {
       "eas": {
-        "projectId": "90b0f593-eee2-4213-bbd2-4b8d93b89266"
+        "projectId": "af389a50-3e81-4cf8-a5e6-12cc195e91bb"
       }
     },
-    "owner": "kirsty_lake"
+    "owner": "kirsty_lake",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/af389a50-3e81-4cf8-a5e6-12cc195e91bb"
+    }
   }
 }
