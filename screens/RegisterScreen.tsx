@@ -176,40 +176,7 @@ const RegisterScreen = ({ navigation }) => {
       })
   }
 
-  //triggers when the signup button is pressed creates a user in the firebase auth file,
-  //stores the image and logs the user in
-  // async function signUp() {
-  //   if (value.email === '' || value.password === '' || value.username === '') {
-  //     setValue({
-  //       ...value,
-  //       error: 'Email and password and name are mandatory.'
-  //     })
-  //     return;
-  //   }
-  //   await createUserWithEmailAndPassword(auth, value.email, value.password)
-  //     .then(() => {
-  //       value.id = (auth?.currentUser?.uid)
-  //       value.error = '';
-  //       createUserRef();
-  //     })
-  //     .then(() => {
-  //       auth().currentUser.updateProfile({
-  //         displayName: value.username,
-  //         photoURL: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png'
-  //       })
-  //       console.log(auth.currentUser);
-  //       // navigation.navigate('CategoryScreen');
-  //       changeCategory();
-  //     })
-  //     .catch((error) => {
-  //       setValue({
-  //         ...value,
-  //         error: error.message,
-  //       })
-  //       console.log(error.message)
-  //     })
 
-  // }
 
   async function signUp() {
     if (value.email === '' || value.password === '' || value.username === '') {
@@ -256,7 +223,7 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior="padding">
+      behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
         <View style={styles.greetingContainer}>
           <Text style={styles.greetingText}>Welcome to Jargle</Text>

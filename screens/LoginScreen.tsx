@@ -1,21 +1,14 @@
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, ImageBackground, Image, Alert } from 'react-native'
-import React, { useEffect, useState, useLayoutEffect } from 'react'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { useNavigation } from '@react-navigation/core';
-import GoogleButton from './components/GoogleButton';
+import { signInWithEmailAndPassword} from "firebase/auth";
 import { LinearGradient } from 'expo-linear-gradient';
-
-//https://www.youtube.com/watch?v=onW84a_p4VA&list=PLO3Dk6jx9EISXHQ41tqkBQJLR3FqBYoW9&index=22 
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const video = React.useRef(null);
-    const [status, setStatus] = React.useState({});
 
     // Cast the navigation object to use our custom navigation prop types
-
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
@@ -29,6 +22,7 @@ const LoginScreen = ({navigation}) => {
         navigation.navigate('RegisterScreen')
     }
 
+    //use Firebase authentication to sign in
     const handleLogin = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredentials) => {

@@ -12,6 +12,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { auth, firebase, firestore } from '../firebase'
 import * as ImagePicker from "expo-image-picker";
@@ -277,7 +278,7 @@ const SettingsScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior="padding">
+      behavior={Platform.OS === "ios" ? "padding" : undefined} >
       <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
       {!userData ? (
                 <ActivityIndicator size="large" color="white" />
@@ -378,10 +379,11 @@ const styles = StyleSheet.create({
   },
   control: {
     backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    margin: 10
+    // paddingHorizontal: 15,
+    // paddingVertical: 10,
+    // borderRadius: 10,
+    // margin: 2
+    alignItems: 'center'
   },
   signUpButtonContainer: {
     width: 125,
