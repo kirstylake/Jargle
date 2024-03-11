@@ -15,7 +15,8 @@ const HomeScreen = ({ navigation }) => {
     const [forceRefresh, setForceRefresh] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
     const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true)    //sets the style of the header to a custom styling
+    const [loading, setLoading] = useState(true)   
+
     useLayoutEffect(() => {
         navigation.setOptions({
             title: "",
@@ -40,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
     const logout = async () => {
         try {
             await firebase.auth().signOut();
-            navigation.replace('LoginScreen');
+            navigation.replace('LoginScreen', { 'route': 'true' });
         } catch (e) {
             console.log(e);
         }
@@ -75,7 +76,7 @@ const HomeScreen = ({ navigation }) => {
                     }));
 
                     setUserData(userData);
-                    setValue({ ...value, ...userData[0]});
+                    setValue({ ...value, ...userData[0] });
 
                 }
             );
@@ -148,47 +149,13 @@ const HomeScreen = ({ navigation }) => {
         if (userData[0].category == "0") {
             changeCategory()
         } else {
-            navigation.navigate('GameScreen',  { 'route': 'true' } );
+            navigation.navigate('GameScreen', { 'route': 'true' });
             setForceRefresh(true);
         }
     };
 
-    // const handleQuizScreenNavigation = () => {
-    //     // Navigate to GameScreen and set forceRefresh to true
-        
-    //     if (userData[0].category === '') {
-    //         changeCategory()
-    //     } else {
-    //         navigation.navigate('QuizScreen', { 'route': 'true' });
-    //         setForceRefresh(true);
-    //     }
-    // };
-
-    // const handleTimeExpired = (isExpired) => {
-    //     setShowButtons(isExpired);
-    //     console.log(isExpired)
-    // };
-
     return (
         <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
-            {/* <View style={styles.container}>
-                <Text style={styles.title}>Welcome to Jargle!</Text>
-                <TouchableOpacity
-                    style={styles.playButton}
-                    onPress={handleGameScreenNavigation} //Ensure a new definition is used every time the app loads
-                >
-                    <Text style={styles.playButtonText}>Play</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.playButton}
-                    onPress={() => navigation.navigate('QuizScreen', { key: new Date().toString() })} //Ensure a new definition is used every time the app loads
-                >
-                    <Text style={styles.playButtonText}>Quiz Mode</Text>
-                </TouchableOpacity>
-                <TimerComponent shouldStart={false} hidden={false} />
-                {remainingTime > 0 &&
-                    <Text>{remainingTime}</Text>}
-            </View> */}
             <SafeAreaView style={styles.container}>
                 {loading ? (
                     <ActivityIndicator size="large" color="white" />
@@ -196,14 +163,10 @@ const HomeScreen = ({ navigation }) => {
                     <>
                         {userData && (
                             <View style={styles.container}>
-                                <Image
-                                    style={styles.userImg}
-                                    source={{
-                                        uri: userData && userData[0] && userData[0].file
-                                            ? userData[0].file
-                                            : 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png',
-                                    }}
-                                />
+                                {value.file ? (<Image source={{ uri: userData && userData[0] && userData[0].file }} style={styles.userImg} />
+                                ) : (
+                                <Image source={require('../assets/icons/emptyUser.png')} style={styles.userImg} />
+                                )}
                                 <View
                                     style={styles.welcome}>
                                     <Image style={styles.logo} source={require('../assets/icons/HomeLogo.png')} />
@@ -218,7 +181,7 @@ const HomeScreen = ({ navigation }) => {
                                         <View>
                                             <Text
                                                 style={styles.scoreText
-                                                }> Welcome Back {userData && userData[0] && userData[0].username ? userData[0].username: ""}
+                                                }> Welcome Back {userData && userData[0] && userData[0].username ? userData[0].username : ""}
                                             </Text>
                                         </View>
                                         {userData && userData[0] && remainingTime === 0 && (
@@ -229,15 +192,8 @@ const HomeScreen = ({ navigation }) => {
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
-                                            
+
                                         )}
-                                         {/* <View style={styles.playButton}>
-                                                <TouchableOpacity onPress={handleQuizScreenNavigation}>
-                                                    <Text style={styles.playButtonText}>
-                                                        Quiz
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View> */}
                                     </View>
                                 </ScrollView>
                             </View>

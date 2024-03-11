@@ -14,12 +14,12 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { auth, firebase, firestore } from '../firebase'
+import { auth, firebase, firestore, storage } from '../firebase'
 import * as ImagePicker from "expo-image-picker";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, collection, getDocs, query, where, orderBy, onSnapshot, getCountFromServer } from 'firebase/firestore'
-import { getDatabase, ref, set, update } from "firebase/database";
 import { LinearGradient } from 'expo-linear-gradient';
+import { uploadBytesResumable, ref as sRef, getDownloadURL } from "firebase/storage";
+import 'firebase/storage'
 
 
 
@@ -29,6 +29,7 @@ const SettingsScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const userRef = firebase.firestore().collection('Users')
   const [forceRefresh, setForceRefresh] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Refresh the screen when navigating back from GameScreen
@@ -52,6 +53,34 @@ const SettingsScreen = ({ navigation }) => {
       headerTintColor: 'white'
     })
   }, [navigation]);
+
+  useEffect(() => {
+   setLoading(true);
+    let unsubscribeUser = null;
+    if (userData == null) {
+      unsubscribeUser = onSnapshot(
+        query(
+          collection(firestore, "Users"),
+          where("id", "==", auth.currentUser.uid)
+        ),
+        (snapshot) => {
+          const userData = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+
+          }));
+          if (userData.length > 0) { // Ensure userData is not an empty array
+            setUserData(userData);
+            setValue({ ...value, ...userData[0] });
+          } else {
+            // Handle the case where no user data is found
+            console.log("No user data found");
+          }
+        }
+      );
+      setLoading(false)
+    }
+  }, [userData])
 
   const [value, setValue] = useState({
     id: '',
@@ -125,68 +154,69 @@ const SettingsScreen = ({ navigation }) => {
 
   //this function is triggered when the signup button is pressed but only after the correct
   //information has been added
+  //https://firebase.google.com/docs/storage/web/upload-files#web-namespaced-api_4
   const storeImage = async () => {
     let temp = null;
-    if (value.file == null) return null;
+    if (value.file == null) return
 
-    const img = await fetch(value.file)
-    let blob = await img.blob()
-
-    console.log(value.file)
+    const img = await fetch(value.file);
+    const blob = await img.blob();
 
     const metadata = {
       contentType: 'image/jpeg'
     };
 
-    //creates a query refrence for storing the file to the media storage
-    const storageRef = firebase.storage().ref(`profile/${auth.currentUser.uid}`)
-    var uploadTask = storageRef.child('image').put(blob, metadata);
+    try {
 
-    //begins the upload task and waits till it is compleate before moving on
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-      (snapshot) => {
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-          case firebase.storage.TaskState.PAUSED: // or 'paused'
-            console.log('Upload is paused');
-            break;
-          case firebase.storage.TaskState.RUNNING: // or 'running'
-            console.log('Upload is running');
-            break;
+      const storageRef = sRef(storage, 'profile/' + userData[0].id);
+      //https://stackoverflow.com/questions/70297884/typeerror-db-checknotdeleted-is-not-a-function-when-creating-a-storage-ref-o
+      const uploadTask = uploadBytesResumable(storageRef, blob, metadata);
+      console.log('made it here')
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          console.log('Error uploading file' + error.code)
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              console.log(error.code)
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              console.log(error.code)
+              break;
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              console.log(error.code)
+              break;
+          }
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            temp = downloadURL;
+            return downloadURL;
+          });
         }
-      },
-      (error) => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        switch (error.code) {
-          case 'storage/unauthorized':
-            // User doesn't have permission to access the object
-            break;
-          case 'storage/canceled':
-            // User canceled the upload
-            break;
-
-          // ...
-
-          case 'storage/unknown':
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-        }
-      },
-      () => {
-        // Upload completed successfully, now we can get the download URL
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          temp = downloadURL;
-          value.file = temp;
-          console.log(temp)
-
-        });
-      }
-    )
+      )
+    } catch (error) {
+      console.error('Error storing image:', error);
+    }
   }
 
 
@@ -218,29 +248,6 @@ const SettingsScreen = ({ navigation }) => {
     }
   }
 
-  useEffect(() => {
-    let unsubscribeUser = null;
-
-    if (userData == null) {
-      unsubscribeUser = onSnapshot(
-        query(
-          collection(firestore, "Users"),
-          where("id", "==", auth.currentUser.uid)
-        ),
-        (snapshot) => {
-          const userData = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-
-          }));
-          setUserData(userData);
-          setValue({ ...value, ...userData[0] });
-        }
-      );
-    }
-  }, [userData])
-
-  console.log(userData)
   //triggers when the signup button is pressed creates a user in the firebase auth file,
   //stores the image and logs the user in
   async function updateProfile() {
@@ -252,11 +259,8 @@ const SettingsScreen = ({ navigation }) => {
       })
       return;
     } else {
-
-
-      console.log('Checking the value was not erase' + value.file)
-      console.log('user data')
-      console.log(userData[0])
+      setLoading(false)
+      console.log('Updating user data');
       firebase.firestore()
         .collection('Users')
         .doc(userData[0].id)
@@ -268,10 +272,23 @@ const SettingsScreen = ({ navigation }) => {
         .then(() => {
           console.log('User updated!');
           navigation.replace('HomeScreen');
+          if (userData && userData.length > 0 && value.file != '') {
+            console.log("storing file")
+            setLoading(true)
+            try {
+              const downloadURL = storeImage();
+              // Handle the downloadURL here, for example, update state
+              console.log('generated value' + value.file)
+            } catch (error) {
+              // Handle errors
+              console.error('Error uploading image:', error);
+            }
+          }
+          setLoading(true)
         }).catch((error) => {
           // It's important to catch and handle any errors
           console.error("Error updating user's category:", error);
-        });;
+        });
     }
   }
 
@@ -280,10 +297,10 @@ const SettingsScreen = ({ navigation }) => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined} >
       <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
-      {!userData ? (
-                <ActivityIndicator size="large" color="white" />
-            ) : (
-                <>
+        {!loading ? (
+          <ActivityIndicator size="large" color="white" />
+        ) : (
+          <>{userData && (
             <ScrollView style={styles.scrollContainer}>
               <View style={styles.greetingContainer}>
                 <Text style={styles.profileImageText}>Click image to select a profile picture</Text>
@@ -293,7 +310,10 @@ const SettingsScreen = ({ navigation }) => {
                   <View style={styles.profileImageButton}>
                     <TouchableOpacity onPress={pickImage} activeOpacity={0.5} >
                       <View >
-                        <Image style={styles.profileImage} source={{ uri: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png' }} />
+                      {value.file ?( <Image source={{ uri: value.file }} style={styles.profileImage} />
+                        ) : (
+                        <Image source={require('../assets/icons/emptyUser.png')} style={styles.profileImage} />
+                        )}
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -340,14 +360,14 @@ const SettingsScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
 
-              { userData[0].admin === true && 
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    onPress={addJargon}
-                    style={styles.button}>
-                    <Text style={styles.buttonText}>Add Jargon</Text>
-                  </TouchableOpacity>
-                </View>}
+                {userData[0].admin === true &&
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      onPress={addJargon}
+                      style={styles.button}>
+                      <Text style={styles.buttonText}>Add Jargon</Text>
+                    </TouchableOpacity>
+                  </View>}
 
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
@@ -357,11 +377,11 @@ const SettingsScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </ScrollView>
+            </ScrollView> )}
             <View style={{ alignItems: 'flex-end' }}>
             </View>
-            </>
-            )}
+          </>
+        )}
       </LinearGradient>
     </KeyboardAvoidingView>
   );

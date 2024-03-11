@@ -274,9 +274,7 @@ const GameScreen = ({ navigation, startTimer }) => {
             }
             updateLetterColors(guess);
             console.log('guess:' + guess)
-            console.log(letterColors['T'])
             setGuess('');
-            console.log(guesses.length)
             console.log(currentAttempt)
             if (currentAttempt < guesses.length - 1) {
                 setCurrentAttempt(currentAttempt + 1);

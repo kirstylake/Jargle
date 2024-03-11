@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=aFtYsghw-1k
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,22 +10,27 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
-import { auth, firebase } from '../firebase'
+import { auth, firebase, storage } from '../firebase'
 import * as ImagePicker from "expo-image-picker";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { LinearGradient } from 'expo-linear-gradient';
+import { getDownloadURL, uploadBytesResumable, ref as sRef } from 'firebase/storage';
+
 
 const RegisterScreen = ({ navigation }) => {
   const [storagePermission, setStoragePermission] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
-  const userRef = firebase.firestore().collection('Users')
+  const userRef = firebase.firestore().collection('Users');
+  const [loading, setLoading] = useState(false);
+  const [forceRefresh, setForceRefresh] = useState(false)
   const [value, setValue] = useState({
     id: '',
     email: '',
     password: '',
     username: '',
-    file: null,
+    file: '',
     error: '',
     category: "0",
     difficulty: '',
@@ -44,11 +49,23 @@ const RegisterScreen = ({ navigation }) => {
       headerTintColor: 'white',
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.replace("LoginScreen", { 'route': 'true' })} style={{ marginLeft: 20 }}>
-            <Text style={styles.backButtonText}>Back</Text>
+          <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
-    ),
+      ),
     })
   })
+
+  useEffect(() => {
+    // Refresh the screen when navigating back from Home Screen
+    const unsubscribe = navigation.addListener('focus', () => {
+        if (forceRefresh) {
+            console.log("Refreshed Register Screen");
+            setForceRefresh(false);
+        }
+    });
+
+    return unsubscribe;
+}, [navigation, forceRefresh]);
 
   // This function is triggered when the "Open camera" button pressed
   const openCamera = async () => {
@@ -104,69 +121,66 @@ const RegisterScreen = ({ navigation }) => {
   //this function is triggered when the signup button is pressed but only after the correct
   //information has been added
   const storeImage = async () => {
-    let temp = null;
-    if (value.file == null) return null;
+    let temp = '';
 
-    const img = await fetch(value.file)
-    let blob = await img.blob()
-
-    console.log(value.file)
-
+    const img = await fetch(value.file);
+    const blob = await img.blob();
     const metadata = {
       contentType: 'image/jpeg'
     };
 
-    //creates a query reference for storing the file to the media storage
-    const storageRef = firebase.storage().ref(`profile/${auth.currentUser.uid}`)
-    var uploadTask = storageRef.child('image').put(blob, metadata);
-
-    //begins the upload task and waits till it is compleate before moving on
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-      (snapshot) => {
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-          case firebase.storage.TaskState.PAUSED: // or 'paused'
-            console.log('Upload is paused');
-            break;
-          case firebase.storage.TaskState.RUNNING: // or 'running'
-            console.log('Upload is running');
-            break;
+    try {
+      const storageRef = sRef(storage, 'profile/' + value.id);
+      //https://stackoverflow.com/questions/70297884/typeerror-db-checknotdeleted-is-not-a-function-when-creating-a-storage-ref-o
+      const uploadTask = uploadBytesResumable(storageRef, blob, metadata);
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          console.log('Error uploading file' + error.code)
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              console.log(error.code)
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              console.log(error.code)
+              break;
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              console.log(error.code)
+              break;
+          }
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            temp = downloadURL;
+            return downloadURL;
+          });
         }
-      },
-      (error) => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        switch (error.code) {
-          case 'storage/unauthorized':
-            // User doesn't have permission to access the object
-            break;
-          case 'storage/canceled':
-            // User canceled the upload
-            break;
-
-          // ...
-
-          case 'storage/unknown':
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-        }
-      },
-      () => {
-        // Upload completed successfully, now we can get the download URL
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          temp = downloadURL;
-          value.file = temp;
-          createUserRef();
-        });
-      }
-    )
+      )
+    } catch (error) {
+      console.error('Error storing image:', error);
+    }
   }
 
-  //creates a user refrence for building a complete list of users
+  //creates a user reference for building a complete list of users
   const createUserRef = async () => {
     userRef
       .doc(auth?.currentUser?.uid)
@@ -179,6 +193,13 @@ const RegisterScreen = ({ navigation }) => {
 
 
   async function signUp() {
+
+    // Trim whitespace from email, password, and username
+    value.email = value.email.trim();
+    value.password = value.password.trim();
+    value.username = value.username.trim();
+
+    // Check for empty email, password, and username
     if (value.email === '' || value.password === '' || value.username === '') {
       setValue({
         ...value,
@@ -186,36 +207,71 @@ const RegisterScreen = ({ navigation }) => {
       });
       return;
     }
-  
+
+    // Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value.email)) {
+      setValue({
+        ...value,
+        error: 'Invalid email format.'
+      });
+      return;
+    }
+
+    // Password Validation
+    const MIN_PASSWORD_LENGTH = 8;
+    if (value.password.length < MIN_PASSWORD_LENGTH) {
+      setValue({
+        ...value,
+        error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`
+      });
+      return;
+    }
+    setValue(value)
     try {
+      setLoading(true);
       // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, value.email, value.password);
       const user = userCredential.user;
-  
       // Update user profile with username and photoURL
       await firebase.auth().currentUser.updateProfile({
         displayName: value.username,
-        photoURL: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png'
+        photoURL: value.file || 'https://firebasestorage.googleapis.com/v0/b/jargle-ca313.appspot.com/o/emptyUser.png?alt=media&token=5741c66b-49e9-4415-a3cd-9a849b1984f0'
       });
-  
+
       // Store user data in Firestore
       value.id = user.uid;
+      value.error = '';
+      setValue(value)
+      console.log(value)
       await createUserRef();
-  
+      
       // Navigate to CategoryScreen
       changeCategory();
+
+      if (value.file != '') {
+        console.log("storing file")
+        try {
+          const downloadURL = await storeImage();
+        } catch (error) {
+          // Handle errors
+          console.error('Error uploading image:', error);
+        }
+      }
     } catch (error) {
       setValue({
         ...value,
         error: error.message,
       });
       console.log(error.message);
+      setLoading(false)
     }
   }
-  //creates a user refrence for building a complete list of users
+  //creates a user reference for building a complete list of users
   const changeCategory = async () => {
     try {
       navigation.replace('CategoryScreen');
+      setForceRefresh(true);
     } catch (e) {
       console.log(e);
     }
@@ -225,69 +281,78 @@ const RegisterScreen = ({ navigation }) => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <LinearGradient colors={['#004aad', '#cb6ce6']} style={styles.background}>
-        <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Welcome to Jargle</Text>
-          <Text style={styles.greetingText}>Please Create A User Account</Text>
-          <Text style={styles.profileImageText}>Click image to select a profile picture</Text>
-        </View>
-        <ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-          <View style={styles.profileImageSelectorContainer}>
-            <View style={styles.profileImageContainer}>
-              <View style={styles.profileImageButton}>
-                <TouchableOpacity onPress={pickImage} activeOpacity={0.5} >
-                  <View >
-                    <Image style={styles.profileImage} source={{ uri: value.file || 'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Images.png' }} />
+        {loading ? (
+          <ActivityIndicator size="large" color="white" />
+        ) : (
+          <>
+            <View style={styles.greetingContainer}>
+              <Text style={styles.greetingText}>Welcome to Jargle</Text>
+              <Text style={styles.greetingText}>Please Create A User Account</Text>
+              <Text style={styles.profileImageText}>Click image to select a profile picture</Text>
+            </View>
+            <ScrollView style={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+              <View style={styles.profileImageSelectorContainer}>
+                <View style={styles.profileImageContainer}>
+                  <View style={styles.profileImageButton}>
+                    <TouchableOpacity onPress={pickImage} activeOpacity={0.5} >
+                      <View >
+                      {value.file ?( <Image source={{ uri: value.file }} style={styles.profileImage} />
+                        ) : (
+                        <Image source={require('../assets/icons/emptyUser.png')} style={styles.profileImage} />
+                        )}
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.cameraContainer}>
-                <TouchableOpacity onPress={openCamera} activeOpacity={0.5}>
-                  <View style={styles.cameraImageContainer}>
-                    <Image style={styles.cameraImage} source={require("../assets/icons/camera.png")} />
+                  <View style={styles.cameraContainer}>
+                    <TouchableOpacity onPress={openCamera} activeOpacity={0.5}>
+                      <View style={styles.cameraImageContainer}>
+                        <Image style={styles.cameraImage} source={require("../assets/icons/camera.png")} />
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </View>
 
-          {!!value.error && <View style={styles.error}><Text>{value.error}</Text></View>}
+              {!!value.error && <View style={styles.error}><Text>{value.error}</Text></View>}
 
-          <View style={styles.controls}>
-            <View style={styles.textFields}>
-              <TextInput
-                placeholder='Username'
-                value={value.username}
-                onChangeText={(text) => setValue({ ...value, username: text })}
-                style={styles.control}
-              />
-            </View>
-            <View style={styles.textFields}>
-              <TextInput placeholder='Email'
-                style={styles.control}
-                value={value.email}
-                onChangeText={(text) => setValue({ ...value, email: text })}
-              />
-            </View>
-            <View style={styles.textFields}>
-              <TextInput placeholder='Password'
-                style={styles.control}
-                value={value.password}
-                onChangeText={(text) => setValue({ ...value, password: text })}
-                secureTextEntry={true}
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={signUp}
-                style={styles.button}>
-                <Text style={styles.buttonText}>Register</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.controls}>
+                <View style={styles.textFields}>
+                  <TextInput
+                    placeholder='Username'
+                    value={value.username}
+                    onChangeText={(text) => setValue({ ...value, username: text })}
+                    style={styles.control}
+                  />
+                </View>
+                <View style={styles.textFields}>
+                  <TextInput placeholder='Email'
+                    style={styles.control}
+                    value={value.email}
+                    onChangeText={(text) => setValue({ ...value, email: text })}
+                  />
+                </View>
+                <View style={styles.textFields}>
+                  <TextInput placeholder='Password'
+                    style={styles.control}
+                    value={value.password}
+                    onChangeText={(text) => setValue({ ...value, password: text })}
+                    secureTextEntry={true}
+                  />
+                </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={signUp}
+                    style={styles.button}>
+                    <Text style={styles.buttonText}>Register</Text>
+                  </TouchableOpacity>
+                </View>
 
-          </View>
-        </ScrollView>
-        <View style={{ alignItems: 'flex-end' }}>
-        </View>
+              </View>
+            </ScrollView>
+            <View style={{ alignItems: 'flex-end' }}>
+            </View>
+          </>
+        )}
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -447,7 +512,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
-},
+  },
 
 });
 

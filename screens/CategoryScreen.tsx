@@ -49,11 +49,6 @@ const CategoryScreen = ({ navigation }) => {
                     )}
                 </TouchableOpacity>
             ),
-            // headerRight: () => (
-            //     <TouchableOpacity onPress={showGameRules} style={{ marginRight: 20 }}>
-            //         <Text style={styles.helpButtonText}>Help</Text>
-            //     </TouchableOpacity>
-            // ),
         })
     })
 
@@ -68,6 +63,7 @@ const CategoryScreen = ({ navigation }) => {
     const fetchCategories = async () => {
         setLoading(true);
         try {
+            //get the firebase collection
             const categoriesCollection = firebase.firestore().collection('Categories');
             const snapshot = await categoriesCollection.get();
 
@@ -87,30 +83,46 @@ const CategoryScreen = ({ navigation }) => {
             console.error('Failed to fetch categories from Firestore:', error);
         } finally {
             setLoading(false); // Stop loading
+            //set the delected category to either null or the one that the user has assigned to their profile
             setSelectedCategory(userData && userData.length > 0 ? userData[0].category : null)
         }
     };
 
     useEffect(() => {
+        // Define a variable to hold the unsubscribe function
         let unsubscribeUser = null;
+    
+        // Check if userData is null
         if (userData == null) {
+            // If userData is null, subscribe to changes in the Users collection
+            // for the current authenticated user's ID
             unsubscribeUser = onSnapshot(
                 query(
                     collection(firestore, "Users"),
                     where("id", "==", auth.currentUser.uid)
                 ),
                 (snapshot) => {
+                    // Map the snapshot documents to userData array
                     const userData = snapshot.docs.map((doc) => ({
                         id: doc.id,
                         ...doc.data(),
                     }));
+                    // Set the userData state with the fetched data
                     setUserData(userData);
+                    // Update the value state with the data of the first user
                     setValue({ ...value, ...userData[0] })
                 }
             );
-
         }
+        // Fetch categories data
         fetchCategories();
+    
+        // Cleanup function to unsubscribe when component unmounts or userData changes
+        return () => {
+            if (unsubscribeUser) {
+                unsubscribeUser();
+            }
+        };
     }, [userData]);
 
     const updateProfile = (categoryID: string) => {
@@ -175,7 +187,6 @@ const CategoryScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.button,
                                                     selectedCategory === category.id && { backgroundColor: 'white' }
-                                                    // userData && userData.length > 0 && userData[0].category === category.id && { backgroundColor: '#3D87D4' }
                                                 ]}
                                             >
                                                 <Text style={[styles.buttonText, selectedCategory === category.id && { color: '#3D87D4' }]}>
