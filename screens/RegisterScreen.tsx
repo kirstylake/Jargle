@@ -190,8 +190,6 @@ const RegisterScreen = ({ navigation }) => {
       })
   }
 
-
-
   async function signUp() {
 
     // Trim whitespace from email, password, and username
@@ -245,7 +243,6 @@ const RegisterScreen = ({ navigation }) => {
       setValue(value)
       console.log(value)
       await createUserRef();
-      
       // Navigate to CategoryScreen
       changeCategory();
 
@@ -264,14 +261,16 @@ const RegisterScreen = ({ navigation }) => {
         error: error.message,
       });
       console.log(error.message);
-      setLoading(false)
+      setForceRefresh(true);
+      
     }
+    setLoading(false)
   }
-  //creates a user reference for building a complete list of users
+  //creates a user refrence for building a complete list of users
   const changeCategory = async () => {
     try {
+     
       navigation.replace('CategoryScreen');
-      setForceRefresh(true);
     } catch (e) {
       console.log(e);
     }

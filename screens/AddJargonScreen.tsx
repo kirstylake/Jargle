@@ -22,8 +22,8 @@ const AddJargonScreen = ({navigation}) => {
             headerTitleStyle: { flex: 1, textAlign: 'left' },
             headerTintColor: 'white',
             headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.replace("SettingsScreen", { 'route': 'true' })} style={{ marginLeft: 20 }}>
-                    <Text style={styles.helpButtonText}>Settings</Text>
+                <TouchableOpacity onPress={() => navigation.replace("HomeScreen", { 'route': 'true' })} style={{ marginLeft: 20 }}>
+                    <Text style={styles.helpButtonText}>Home</Text>
                 </TouchableOpacity>
             ),
             headerRight: () => (
@@ -112,7 +112,7 @@ const AddJargonScreen = ({navigation}) => {
         } catch (error) {
             Alert.alert('Error', error.message);      
         }
-        navigation.replace("SettingsScreen", { 'route': 'true' })
+        navigation.replace("HomeScreen", { 'route': 'true' })
         setLoading(false)
     };
 

@@ -19,7 +19,7 @@ const LoginScreen = ({navigation}) => {
     }, [])
 
     const handleSignUp = () => {
-        navigation.navigate('RegisterScreen')
+        navigation.navigate('RegisterScreen', { 'route': 'true' })
     }
 
     //use Firebase authentication to sign in

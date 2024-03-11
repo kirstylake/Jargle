@@ -89,40 +89,25 @@ const CategoryScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
-        // Define a variable to hold the unsubscribe function
         let unsubscribeUser = null;
-    
-        // Check if userData is null
         if (userData == null) {
-            // If userData is null, subscribe to changes in the Users collection
-            // for the current authenticated user's ID
             unsubscribeUser = onSnapshot(
                 query(
                     collection(firestore, "Users"),
                     where("id", "==", auth.currentUser.uid)
                 ),
                 (snapshot) => {
-                    // Map the snapshot documents to userData array
                     const userData = snapshot.docs.map((doc) => ({
                         id: doc.id,
                         ...doc.data(),
                     }));
-                    // Set the userData state with the fetched data
                     setUserData(userData);
-                    // Update the value state with the data of the first user
                     setValue({ ...value, ...userData[0] })
                 }
             );
+
         }
-        // Fetch categories data
         fetchCategories();
-    
-        // Cleanup function to unsubscribe when component unmounts or userData changes
-        return () => {
-            if (unsubscribeUser) {
-                unsubscribeUser();
-            }
-        };
     }, [userData]);
 
     const updateProfile = (categoryID: string) => {
@@ -138,6 +123,7 @@ const CategoryScreen = ({ navigation }) => {
                 .then(() => {
                     console.log('User updated!');
                     navigation.navigate("HomeScreen", { 'route': 'true' })
+                    setLoading(false)
                 })
                 .catch((error) => {
                     // It's important to catch and handle any errors
@@ -187,6 +173,7 @@ const CategoryScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.button,
                                                     selectedCategory === category.id && { backgroundColor: 'white' }
+                                                    // userData && userData.length > 0 && userData[0].category === category.id && { backgroundColor: '#3D87D4' }
                                                 ]}
                                             >
                                                 <Text style={[styles.buttonText, selectedCategory === category.id && { color: '#3D87D4' }]}>

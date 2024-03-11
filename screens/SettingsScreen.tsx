@@ -248,6 +248,11 @@ const SettingsScreen = ({ navigation }) => {
     }
   }
 
+
+
+
+
+
   //triggers when the signup button is pressed creates a user in the firebase auth file,
   //stores the image and logs the user in
   async function updateProfile() {
