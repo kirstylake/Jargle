@@ -20,13 +20,6 @@ import 'firebase/compat/firestore';
 
 // Firebase configuration details for the web app
 const firebaseConfig = {
-    apiKey: "AIzaSyC2Qi4TQUtYcwJrcHHk1xEHjMjVlhBj7uU",
-    authDomain: "jargle-ca313.firebaseapp.com",
-    projectId: "jargle-ca313",
-    storageBucket: "jargle-ca313.appspot.com",
-    messagingSenderId: "646348725676",
-    appId: "1:646348725676:web:ada10ccd1ac4c2c17bee09",
-    measurementId: "G-MBJ7LXCQZT"
 };
 
 // Initialize Firebase variables
